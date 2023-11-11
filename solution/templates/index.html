@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Eign Value Eign Vector</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+<body>
+    {% csrf_token %}
+    <h1>Eigan Value and Eigan Vector</h1>
+    <div class="row">
+        <div class="col">
+            <input type="number" id="ele" class="form-control" placeholder="No. Of Element in matrix" />
+        </div>
+        <div class="col">
+            <button onclick="getFields()">Submit</button>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row" id="fields">
+        </div>
+        <div id="result"></div>
+        <div class="row">
+            <button id="calc" style="display: none;" onclick="getCalculation()">Submit</button>
+        </div>
+    </div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script>
+        function getFields() {
+            var output = ''
+            var ele = document.getElementById('ele').value
+
+            for (var i = 0; i < ele * ele; i++) {
+                output += `<div class="col-md-4"><input class='matrix' type='number' placeholder=${i + 1} /></div>`
+            }
+            document.getElementById('fields').innerHTML = output
+            $('#calc').show()
+        }
+       
+        function getCalculation() {
+            var matrix = document.getElementsByClassName('matrix')
+            var ele = document.getElementById('ele').value
+
+            var val = []
+            for (var j = 0; j < matrix.length; j++) {
+                val.push(parseInt(matrix[j].value))
+            }
+            console.log(val)
+            console.log(document.getElementsByName('csrfmiddlewaretoken')[0].value)
+            $.ajax({
+                url:'/api/matrix',
+                method:'POST',
+                data:{
+                    "val":val,
+                    "ele":ele
+                },
+                success:function(e){
+                    $('#result').html(e)
+                }
+            })
+        }
+    </script>
+</body>
+
+</html>
